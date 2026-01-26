@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -120,6 +121,15 @@ namespace calendar
                     Console.WriteLine("Kilépés...");
                 }
             } while (false);
+
+            StreamWriter file = new StreamWriter("naptar.txt", false, Encoding.UTF8);
+
+            foreach (var ev in events)
+            {
+                file.WriteLine($"{ev.Parent};{ev.Date};{ev.Duration}");
+            }
+
+            file.Close();
         }
     }
 }
