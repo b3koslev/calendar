@@ -23,9 +23,64 @@ namespace calendar
             }
         }
 
-        static void PrintCalendar()
+        static string[,] CreateCalendar()
         {
+            Console.Clear();
 
+            Console.WriteLine("=========================");
+            Console.WriteLine("\tFebruár");
+            Console.WriteLine("=========================");
+            Console.WriteLine();
+
+            string[,] calendar = new string[6, 8];
+            calendar[0, 1] = "H";
+            calendar[0, 2] = "K";
+            calendar[0, 3] = "Sze";
+            calendar[0, 4] = "Cs";
+            calendar[0, 5] = "P";
+            calendar[0, 6] = "Szo";
+            calendar[0, 7] = "V";
+            //calendar[1, 0] = "1. hét";
+            //calendar[2, 0] = "2. hét";
+            //calendar[3, 0] = "3. hét";
+            //calendar[4, 0] = "4. hét";
+            //calendar[5, 0] = "5. hét";
+
+            int day = 0;
+
+            for (int i = 1; i < calendar.GetLength(0); i++)
+            {
+                for (int j = 0; j < calendar.GetLength(1); j++)
+                {
+                    if (day > 29)
+                    {
+                        break;
+                    }
+                    else if (day != 0)
+                    {
+                        calendar[i, j] = Convert.ToString(day);
+                        day++;
+                    }
+                    else
+                    {
+                        day++;
+                    }
+                }
+            }
+
+            return calendar;
+        }
+
+        static void PrintCalendar(string[,] calendar)
+        {
+            for (int i = 0; i < calendar.GetLength(0); i++)
+            {
+                for (int j = 0; j < calendar.GetLength(1); j++)
+                {
+                    Console.Write(calendar[i, j] + "\t");
+                }
+                Console.WriteLine();
+            }
         }
 
         static Event NewEvent()
@@ -72,14 +127,34 @@ namespace calendar
             return new_event;
         }
 
-        static void ViewNextEvent()
+        static void ViewNextEvent(List<Event> event_list)
         {
+            Random random = new Random();
+            int day = random.Next(1, 30);
+
+            DateTime date = new DateTime(2028, 02, day);
+            
+            for (int i = 0; i < event_list.Count; i++)
+            {
+                if (event_list[i].Date == date)
+                {
+                    Console.WriteLine("A következő esemény adatai: ");
+                    Console.WriteLine("Felhasználó: " + event_list[i].Parent);
+                    Console.WriteLine("Dátum: " + event_list[i].Date);
+                    Console.WriteLine("Időtartam: " + event_list[i].Duration);
+                }
+                else
+                {
+                    Console.WriteLine("Nincs közelgő esemény!");
+                }
+            }
         }
 
         static bool Exit()
         {
             return true;
         }
+
         static void Main(string[] args)
         {
             Console.WriteLine("================================================="); 
@@ -105,7 +180,7 @@ namespace calendar
 
                 if (choice == 1)
                 {
-                    PrintCalendar();
+                    PrintCalendar(CreateCalendar());
                 }
                 else if (choice == 2)
                 {
@@ -113,7 +188,7 @@ namespace calendar
                 }
                 else if (choice == 3)
                 {
-                    ViewNextEvent();
+                    ViewNextEvent(events);
                 }
                 else if (choice == 4)
                 {
