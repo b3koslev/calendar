@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,13 +24,29 @@ namespace calendar
             }
         }
 
+        static int CreateMenu()
+        {
+            Console.WriteLine("1. Naptár megjelenítése");
+            Console.WriteLine("2. Új esemény hozzáadása");
+            Console.WriteLine("3. Legközelebbi esemény megjelenítése");
+            Console.WriteLine("4. Kilépés");
+
+            Console.WriteLine();
+
+            Console.Write("Válassz egy opciót (1-4): ");
+
+            int choice = Convert.ToInt32(Console.ReadLine());
+
+            return choice;
+        }
+
         static string[,] CreateCalendar()
         {
             Console.Clear();
 
-            Console.WriteLine("=========================");
-            Console.WriteLine("\tFebruár");
-            Console.WriteLine("=========================");
+            Console.WriteLine("=========================================================");
+            Console.WriteLine("\t\t\tFebruár");
+            Console.WriteLine("=========================================================");
             Console.WriteLine();
 
             string[,] calendar = new string[6, 8];
@@ -40,17 +57,17 @@ namespace calendar
             calendar[0, 5] = "P";
             calendar[0, 6] = "Szo";
             calendar[0, 7] = "V";
-            //calendar[1, 0] = "1. hét";
-            //calendar[2, 0] = "2. hét";
-            //calendar[3, 0] = "3. hét";
-            //calendar[4, 0] = "4. hét";
-            //calendar[5, 0] = "5. hét";
+            calendar[1, 0] = "1. hét";
+            calendar[2, 0] = "2. hét";
+            calendar[3, 0] = "3. hét";
+            calendar[4, 0] = "4. hét";
+            calendar[5, 0] = "5. hét";
 
             int day = 0;
 
             for (int i = 1; i < calendar.GetLength(0); i++)
             {
-                for (int j = 0; j < calendar.GetLength(1); j++)
+                for (int j = 1; j < calendar.GetLength(1); j++)
                 {
                     if (day > 29)
                     {
@@ -81,6 +98,40 @@ namespace calendar
                 }
                 Console.WriteLine();
             }
+        }
+
+        static List<Event> RandomEvents(string[,] calendar, Event events)
+        {
+            List<Event> random_events = new List<Event>();
+
+            Random random_parents = new Random(); 
+            Random random_date = new Random();
+            Random random_duration = new Random();
+
+            string parent = string.Empty;
+            DateTime date;
+            int duration = 0;
+
+            for (int i = 1; i <= calendar.GetLength(1); i++)
+            {
+                for (int j = 1; j <= 10; j++)
+                {
+                    int parents = random_parents.Next(1, 3);
+                    int dates = random_date.Next(1, 30);
+                    int durations = random_duration.Next(30, 121);
+
+                    if (parents == 1)
+                    {
+                        parent = "anya";
+                    }
+                    else
+                    {
+                        parent = "apa";
+                    }
+                }
+            }
+
+            return random_events;
         }
 
         static Event NewEvent()
@@ -136,16 +187,18 @@ namespace calendar
             
             for (int i = 0; i < event_list.Count; i++)
             {
-                if (event_list[i].Date == date)
+                if (event_list[i].Date >= date)
                 {
                     Console.WriteLine("A következő esemény adatai: ");
                     Console.WriteLine("Felhasználó: " + event_list[i].Parent);
                     Console.WriteLine("Dátum: " + event_list[i].Date);
-                    Console.WriteLine("Időtartam: " + event_list[i].Duration);
+                    Console.WriteLine("Időtartam: " + event_list[i].Duration + " perc");
+                    break;
                 }
                 else
                 {
                     Console.WriteLine("Nincs közelgő esemény!");
+                    break;
                 }
             }
         }
@@ -163,39 +216,47 @@ namespace calendar
             Console.WriteLine();
 
             bool endOfCalendar = false;
-            List<Event> events = new List<Event>();
+            int choice = 0;
+            List<Event> events = RandomEvents(CreateCalendar());
+
+            choice = CreateMenu();
 
             do
             {
-                Console.WriteLine("1. Naptár megjelenítése");
-                Console.WriteLine("2. Új esemény hozzáadása");
-                Console.WriteLine("3. Legközelebbi esemény megjelenítése");
-                Console.WriteLine("4. Kilépés");
-
-                Console.WriteLine();
-
-                Console.Write("Válassz egy opciót (1-4): ");
-
-                int choice = Convert.ToInt32(Console.ReadLine());
-
                 if (choice == 1)
                 {
                     PrintCalendar(CreateCalendar());
+                    Console.WriteLine();
+                    Console.Write("Kilépés a főmenübe...");
+                    Console.ReadKey();
+                    Console.Clear();
+                    choice = CreateMenu();
                 }
                 else if (choice == 2)
                 {
                     events.Add(NewEvent());
+                    Console.WriteLine();
+                    Console.WriteLine("Az esemény rögzítésre került.");
+                    Console.Write("Kilépés a főmenübe...");
+                    Console.ReadKey();
+                    Console.Clear();
+                    choice = CreateMenu();
                 }
                 else if (choice == 3)
                 {
                     ViewNextEvent(events);
+                    Console.WriteLine();
+                    Console.Write("Kilépés a főmenübe...");
+                    Console.ReadKey();
+                    Console.Clear();
+                    choice = CreateMenu();
                 }
                 else if (choice == 4)
                 {
                     endOfCalendar = Exit();
                     Console.WriteLine("Kilépés...");
                 }
-            } while (false);
+            } while (endOfCalendar == false);
 
             StreamWriter file = new StreamWriter("naptar.txt", false, Encoding.UTF8);
 
