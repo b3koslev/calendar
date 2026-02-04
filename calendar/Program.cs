@@ -266,7 +266,7 @@ namespace calendar
 
             StreamWriter file = new StreamWriter("naptar.txt", false, Encoding.UTF8);
 
-            foreach (var ev in events)
+            foreach (Event ev in events)
             {
                 file.WriteLine($"{ev.Parent};{ev.Date};{ev.Duration}");
             }
