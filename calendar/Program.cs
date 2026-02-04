@@ -100,7 +100,7 @@ namespace calendar
             }
         }
 
-        static List<Event> RandomEvents(string[,] calendar, Event events)
+        static List<Event> RandomEvents(string[,] calendar)
         {
             List<Event> random_events = new List<Event>();
 
@@ -112,7 +112,7 @@ namespace calendar
             DateTime date;
             int duration = 0;
 
-            for (int i = 1; i <= calendar.GetLength(1); i++)
+            for (int i = 1; i <= calendar.GetLength(0); i++)
             {
                 for (int j = 1; j <= 10; j++)
                 {
@@ -123,11 +123,17 @@ namespace calendar
                     if (parents == 1)
                     {
                         parent = "anya";
+                        date = new DateTime(2028, 2, dates);
+                        duration = durations;
                     }
                     else
                     {
                         parent = "apa";
+                        date = new DateTime(2028, 2, dates);
+                        duration = durations;
                     }
+
+                    random_events.Add(new Event(parent, date, duration));
                 }
             }
 
