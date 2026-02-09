@@ -104,32 +104,32 @@ namespace calendar
         {
             List<Event> random_events = new List<Event>();
 
-            Random random_parents = new Random(); 
-            Random random_date = new Random();
-            Random random_duration = new Random();
+            Random random = new Random();
 
             string parent = string.Empty;
-            DateTime date;
+            DateTime date = new DateTime();
             int duration = 0;
 
             for (int i = 1; i <= calendar.GetLength(0); i++)
             {
                 for (int j = 1; j <= 10; j++)
                 {
-                    int parents = random_parents.Next(1, 3);
-                    int dates = random_date.Next(1, 30);
-                    int durations = random_duration.Next(30, 121);
+                    int parents = random.Next(1, 3);
+                    int day = random.Next(1, 30);
+                    int hours = random.Next(8, 21);
+                    int minutes = random.Next(0, 60);
+                    int durations = random.Next(30, 121);
 
                     if (parents == 1)
                     {
                         parent = "anya";
-                        date = new DateTime(2028, 2, dates);
+                        date = new DateTime(2028, 2, day, hours, minutes, 0);
                         duration = durations;
                     }
                     else
                     {
                         parent = "apa";
-                        date = new DateTime(2028, 2, dates);
+                        date = new DateTime(2028, 2, day, hours, minutes, 0);
                         duration = durations;
                     }
 
@@ -188,6 +188,7 @@ namespace calendar
         {
             Random random = new Random();
             int day = random.Next(1, 30);
+            bool ifEvent = false;
 
             DateTime date = new DateTime(2028, 02, day);
             
@@ -199,13 +200,14 @@ namespace calendar
                     Console.WriteLine("Felhasználó: " + event_list[i].Parent);
                     Console.WriteLine("Dátum: " + event_list[i].Date);
                     Console.WriteLine("Időtartam: " + event_list[i].Duration + " perc");
+                    ifEvent = true;
                     break;
                 }
-                else
-                {
-                    Console.WriteLine("Nincs közelgő esemény!");
-                    break;
-                }
+            }
+
+            if (ifEvent == false)
+            {
+                Console.WriteLine("Nincs közelgő esemény!");
             }
         }
 
